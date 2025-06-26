@@ -6,7 +6,7 @@ import { View, ActivityIndicator } from "react-native";
 const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState({name: "Teste", email: "teste@example.com"});
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
       }
       setLoading(false);
     }
-    //loadCredentials();
+    loadCredentials();
   }, []);
 
   async function signIn(credentials, isInit) {

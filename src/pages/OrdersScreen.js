@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,10 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { getOrders } from "../services/OrderService";
 
@@ -20,7 +22,40 @@ export default function OrdersScreen() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const navigation = useNavigation();
-  const { token } = useAuth();
+  const { token, logout, cartCount } = useAuth();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: "#000" },
+      headerTitle: () => (
+        <Image
+          source={require("../../assets/logo.jpg")}
+          style={{ width: 140, height: 40, resizeMode: "contain" }}
+        />
+      ),
+      headerTitleAlign: "center",
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => navigation.navigate("Cart")}
+        >
+          <Ionicons name="cart-outline" size={23} color="#fff" />
+          {cartCount > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>
+                {cartCount > 9 ? "9+" : cartCount}
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity style={{ marginRight: 16 }} onPress={logout}>
+          <Ionicons name="log-out-outline" size={23} color="#fff" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, logout, cartCount]);
 
   const fetchOrders = async (pageToLoad = 0, append = false) => {
     try {
@@ -32,16 +67,10 @@ export default function OrdersScreen() {
       }
 
       const response = await getOrders(token, "BRL", pageToLoad);
-
       const newOrders = response.orders || [];
 
       setHasMore(newOrders.length > 0);
-
-      if (append) {
-        setOrders((prev) => [...prev, ...newOrders]);
-      } else {
-        setOrders(newOrders);
-      }
+      setOrders((prev) => (append ? [...prev, ...newOrders] : newOrders));
     } catch (err) {
       setError("Erro ao carregar pedidos. Tente novamente.");
     } finally {
@@ -89,7 +118,10 @@ export default function OrdersScreen() {
       <Text style={styles.orderId}>Pedido #{item.id}</Text>
       <Text style={styles.orderDate}>Data: {formatDate(item.orderDate)}</Text>
       <Text style={styles.orderTotal}>
-        Total: R$ {item.totalConvertedPrice.toFixed(2)}
+        Total: R${" "}
+        <Text style={{ color: "#dc3545" }}>
+          {item.totalConvertedPrice?.toFixed(2) ?? "0,00"}
+        </Text>
       </Text>
       <Text style={styles.orderItems}>
         Itens: {item.items ? item.items.length : 0}
@@ -131,7 +163,9 @@ export default function OrdersScreen() {
   return (
     <FlatList
       data={orders}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) =>
+        item?.id ? item.id.toString() : `order-${index}`
+      }
       renderItem={renderOrder}
       contentContainerStyle={styles.list}
       onEndReached={handleLoadMore}
@@ -166,7 +200,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    height: 300,
   },
   orderId: {
     fontWeight: "bold",
@@ -183,7 +216,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     marginBottom: 4,
-    color: "#28a745",
   },
   orderItems: {
     fontSize: 14,
@@ -196,5 +228,22 @@ const styles = StyleSheet.create({
   noOrdersText: {
     fontSize: 16,
     color: "#6c757d",
+  },
+  cartBadge: {
+    position: "absolute",
+    top: -4,
+    right: -10,
+    backgroundColor: "red",
+    borderRadius: 10,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    minWidth: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cartBadgeText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "bold",
   },
 });

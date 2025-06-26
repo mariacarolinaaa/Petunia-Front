@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,21 @@ const DEFAULT_IMAGE = require("../../assets/logo.jpg");
 export default function OrderDetailScreen({ route }) {
   const navigation = useNavigation();
   const { order } = route.params;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: "#000",
+      },
+      headerTitle: () => (
+        <Image
+          source={require("../../assets/logo.jpg")}
+          style={{ width: 140, height: 40, resizeMode: "contain" }}
+        />
+      ),
+      headerTitleAlign: "center",
+    });
+  }, [navigation]);
 
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -42,14 +57,19 @@ export default function OrderDetailScreen({ route }) {
           resizeMode="cover"
         />
         <View style={styles.details}>
-          <Text style={styles.description}>{product.description || "Sem descrição"}</Text>
-          <Text style={styles.brandModel}>{product.brand} - {product.model}</Text>
+          <Text style={styles.description}>
+            {product.description || "Sem descrição"}
+          </Text>
+          <Text style={styles.brandModel}>
+            {product.brand} - {product.model}
+          </Text>
           <Text style={styles.text}>Quantidade: {item.quantity ?? 0}</Text>
           <Text style={styles.text}>
             Preço unitário: R$ {item.convertedPriceAtPruchase?.toFixed(2)}
           </Text>
           <Text style={styles.text}>
-            Total: R$ {(item.convertedPriceAtPruchase * (item.quantity ?? 0)).toFixed(2)}
+            Total: R${" "}
+            {(item.convertedPriceAtPruchase * (item.quantity ?? 0)).toFixed(2)}
           </Text>
         </View>
       </View>

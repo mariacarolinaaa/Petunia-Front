@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-// Imagem padrão local
+// Imagem padrão
 const DEFAULT_IMAGE = require("../../assets/logo.jpg");
 
 export default function OrderConfirmationScreen() {
@@ -18,9 +18,22 @@ export default function OrderConfirmationScreen() {
 
   const { order } = route.params || {};
 
-  // Debug
-  console.log("Order recebido:", order);
-  console.log("Itens do pedido:", order?.items);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: "#000", // fundo preto
+      },
+      headerTitle: () => (
+        <Image
+          source={require("../../assets/logo.jpg")}
+          style={{ width: 140, height: 40, resizeMode: "contain" }}
+        />
+      ),
+      headerTitleAlign: "center",
+      headerLeft: () => null,
+      headerRight: () => null,
+    });
+  }, [navigation]);
 
   const hasValidOrder =
     order &&
@@ -133,14 +146,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f9fc",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
     color: "#28a745",
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "center",
     color: "#6c757d",
     marginBottom: 4,
@@ -203,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   button: {
-    backgroundColor: "#4e73df",
+    backgroundColor: "#dc3545", // botão vermelho
     paddingVertical: 14,
     borderRadius: 10,
     marginTop: 20,

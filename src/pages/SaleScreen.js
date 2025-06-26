@@ -1,5 +1,4 @@
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useLayoutEffect } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -7,18 +6,19 @@ import {
   Text, 
   TouchableOpacity, 
   ActivityIndicator, 
-  Alert 
+  Alert,
+  Image,
 } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/ProductService';
 import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
 
 export default function SaleScreen() {
   const navigation = useNavigation();
-  const { logout, user } = useAuth();
-  const { cartCount } = useCart();
+  const { logout } = useAuth();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,12 +29,8 @@ export default function SaleScreen() {
     try {
       setLoading(true);
       const response = await getProducts('BRL');
-      // Filtra só produtos com "sale" no nome ou descrição, por exemplo
-      const saleProducts = response.products?.filter(p =>
-        p.description.toLowerCase().includes('sale') ||
-        p.name?.toLowerCase().includes('sale')
-      ) ?? [];
-      setProducts(saleProducts);
+      // Agora SEM filtro, pega todos os produtos igual Novidades
+      setProducts(response.products);
     } catch (error) {
       Alert.alert('Erro ao carregar produtos', error.message);
     } finally {
@@ -48,9 +44,29 @@ export default function SaleScreen() {
     }, [])
   );
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: '#000', // fundo preto
+      },
+      headerTitle: () => (
+        <Image
+          source={require('../../assets/logo.jpg')}
+          style={{ width: 140, height: 40, resizeMode: 'contain' }}
+        />
+      ),
+      headerTitleAlign: 'center',
+      headerRight: () => (
+        <TouchableOpacity style={{ marginRight: 16 }} onPress={logout}>
+          <Ionicons name="log-out-outline" size={23} color="#fff" />
+        </TouchableOpacity>
+      ),
+      headerLeft: null, // sem botão esquerdo
+    });
+  }, [navigation, logout]);
+
   return (
     <View style={styles.container}>
-
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>SALE PTN</Text>
 

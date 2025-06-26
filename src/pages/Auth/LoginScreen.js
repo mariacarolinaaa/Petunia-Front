@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }) {
 
     try {
       setLoading(true);
-     const response = await signIn({ username: email, password });
+     const response = await signIn({email, password });
       if (response?.error) {
         Alert.alert("Erro", response.error);
         return;
