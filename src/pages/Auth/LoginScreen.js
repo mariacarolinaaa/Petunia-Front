@@ -15,8 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("alisson@email.com"); // email fixo
+  const [password, setPassword] = useState("123456");    // senha fixa
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }) {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 5) {
       Alert.alert("Senha inválida", "A senha deve ter no mínimo 6 caracteres.");
       return;
     }

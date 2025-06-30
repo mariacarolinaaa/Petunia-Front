@@ -117,7 +117,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Sale")}
+        onPress={() => navigation.navigate("Mais", { screen: "Sale" })}
       >
         <Text style={styles.buttonText}>SALE PTN</Text>
       </TouchableOpacity>

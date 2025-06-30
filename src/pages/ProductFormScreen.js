@@ -41,16 +41,21 @@ export default function ProductFormScreen({ navigation, route }) {
     }
   }, [existingProduct]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: existingProduct ? "Editar Produto" : "Cadastrar Produto",
-      headerTitleAlign: "center",
-      headerStyle: {
-        backgroundColor: "#f2f2f2",
-      },
-    });
-  }, [navigation, existingProduct]);
-
+   useLayoutEffect(() => {
+      navigation.setOptions({
+        headerStyle: {
+          backgroundColor: "#000",
+        },
+        headerTitle: () => (
+          <Image
+            source={require("../../assets/logo.jpg")}
+            style={{ width: 140, height: 40, resizeMode: "contain" }}
+          />
+        ),
+        headerTitleAlign: "center",
+        headerTintColor: "#fff", // cor do botão de voltar
+      });
+    }, [navigation]);
   const handleSubmit = async () => {
     if (!description || !brand || !model || !currency || !price) {
       Alert.alert("Erro", "Por favor, preencha todos os campos.");

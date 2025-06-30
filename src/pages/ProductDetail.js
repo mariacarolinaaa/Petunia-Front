@@ -9,7 +9,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { getProductById, deleteProduct } from "../services/ProductService";
@@ -23,7 +22,6 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const cartCount = cartItems.length;
   const DEFAULT_IMAGE = require("../../assets/logo.jpg");
 
   const fetchProduct = async () => {
@@ -47,7 +45,7 @@ export default function ProductDetailScreen({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: {
-        backgroundColor: "#000", // fundo cinza escuro
+        backgroundColor: "#000",
       },
       headerTitle: () => (
         <Image
@@ -56,23 +54,9 @@ export default function ProductDetailScreen({ route, navigation }) {
         />
       ),
       headerTitleAlign: "center",
-      headerLeft: () => (
-        <TouchableOpacity style={{ marginLeft: 16 }} onPress={() => navigation.navigate("Cart")}>
-          <Ionicons name="cart-outline" size={24} color="#fff" />
-          {cartCount > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>{cartCount > 9 ? "9+" : cartCount}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 16 }} onPress={logout}>
-          <Ionicons name="log-out-outline" size={24} color="#fff" />
-        </TouchableOpacity>
-      ),
+      headerTintColor: "#fff", // cor do botão de voltar
     });
-  }, [navigation, logout, cartCount]);
+  }, [navigation]);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -127,7 +111,6 @@ export default function ProductDetailScreen({ route, navigation }) {
     <View style={styles.pageContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <Image source={imageSource} style={styles.productImage} />
-
         <Text style={styles.productDescription}>{product.description}</Text>
 
         <View style={styles.infoBox}>
@@ -292,22 +275,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 15,
     color: "#fff",
-  },
-  cartBadge: {
-    position: "absolute",
-    top: -5,
-    right: -10,
-    backgroundColor: "#C1272D",
-    borderRadius: 10,
-    paddingHorizontal: 5,
-    minWidth: 18,
-    height: 18,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cartBadgeText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "bold",
   },
 });

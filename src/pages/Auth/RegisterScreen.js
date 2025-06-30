@@ -17,12 +17,10 @@ export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAddress] = useState('');
-  const [number, setNumber] = useState('');
-  const [cep, setCep] = useState('');
+ 
 
   async function handleRegister() {
-    if (!username || !email || !password || !confirmPassword || !address || !number || !cep) {
+    if (!username || !email || !password || !confirmPassword) {
       Alert.alert('Campos obrigatórios', 'Preencha todos os campos.');
       return;
     }
@@ -48,9 +46,6 @@ export default function RegisterScreen({ navigation }) {
       username,
       email,
       password,
-      address,
-      number,
-      cep,
     };
 
     // Chamar o método de cadastro do contexto
@@ -100,33 +95,6 @@ export default function RegisterScreen({ navigation }) {
         placeholderTextColor="#fff"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-      />
-
-      <View style={styles.row}>
-        <TextInput
-          style={[styles.input, styles.half]}
-          placeholder="Endereço"
-          placeholderTextColor="#fff"
-          value={address}
-          onChangeText={setAddress}
-        />
-        <TextInput
-          style={[styles.input, styles.half]}
-          placeholder="Número"
-          placeholderTextColor="#fff"
-          keyboardType="numeric"
-          value={number}
-          onChangeText={setNumber}
-        />
-      </View>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Cep"
-        placeholderTextColor="#fff"
-        value={cep}
-        onChangeText={setCep}
-        keyboardType="numeric"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>

@@ -47,6 +47,7 @@ export default function CartScreen() {
         />
       ),
       headerTitleAlign: "center",
+       headerTintColor: "#fff", // cor do botão de voltar
       headerLeft: () => null,
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 16 }} onPress={logout}>

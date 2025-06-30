@@ -77,11 +77,13 @@ export default function SaleScreen() {
             {products.length === 0 ? (
               <Text style={{ textAlign: 'center', marginTop: 20 }}>Nenhum produto encontrado.</Text>
             ) : (
-              products.reduce((acc, curr, idx) => {
-                if (idx % 2 === 0) acc.push([curr]);
-                else acc[acc.length - 1].push(curr);
-                return acc;
-              }, []).map((pair, index) => (
+              products
+            .slice(0, 6) // <- limita para os 6 primeiros
+            .reduce((acc, curr, idx) => {
+              if (idx % 2 === 0) acc.push([curr]);
+              else acc[acc.length - 1].push(curr);
+              return acc;
+            }, []).map((pair, index) => (
                 <View key={index} style={styles.row}>
                   {pair.map((item) => (
                     <ProductCard
