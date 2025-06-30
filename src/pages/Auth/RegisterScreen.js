@@ -43,11 +43,12 @@ export default function RegisterScreen({ navigation }) {
 
     // Montar o objeto que será enviado ao backend
     const userData = {
-      username,
+      name: username,
       email,
       password,
     };
 
+    console.log("Registro", userData)
     // Chamar o método de cadastro do contexto
     const response = await signUp(userData);
 

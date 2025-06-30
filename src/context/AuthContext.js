@@ -42,6 +42,7 @@ export default function AuthProvider({ children }) {
   }
 
   async function signUp(credentials) {
+    console.log("signUp", credentials);
     const response = await register(credentials);
 
     if (response?.error) {

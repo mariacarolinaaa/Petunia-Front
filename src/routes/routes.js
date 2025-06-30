@@ -62,7 +62,6 @@ function ExtrasStack() {
       <Stack.Screen name="Novidades" component={SaleScreen} />
       <Stack.Screen name="Sobre" component={SobreScreen} />
       <Stack.Screen name="Contato" component={ContatoScreen} />
-      <Stack.Screen name="Sale" component={SaleScreen} />
     </Stack.Navigator>
   );
 }

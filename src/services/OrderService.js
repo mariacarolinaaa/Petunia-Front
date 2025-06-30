@@ -7,11 +7,9 @@ export async function createOrder(productList, token) {
       quantity: product.quantity,
     }));
 
-    console.log(token);
-
     const response = await api.post(
-      "/ws/orders", //URL <PATH>
-      { items }, //BODY
+      "/ws/orders",
+      { items },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -29,19 +27,24 @@ export async function createOrder(productList, token) {
   }
 }
 
-export async function getOrders(token, currency = "BRL") {
+export async function getOrders(token, currency = "BRL", pageToLoad = 0, size = 10) {
   try {
-    const response = await api.get(`/ws/orders/${currency}?size=100`, {
+    const response = await api.get(`/ws/orders/${currency}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        size,
+        page: pageToLoad,
+      },
     });
-    console.log(response.data.content);
 
     return {
       orders: response.data.content,
+      error: null,
     };
   } catch (error) {
+    console.error("Erro ao buscar pedidos:", error);
     return { error: error.message };
   }
 }

@@ -81,9 +81,9 @@ export default function OrderDetailScreen({ route }) {
       <Text style={styles.title}>Detalhes do Pedido #{order.id}</Text>
       <Text style={styles.date}>Data: {formatDate(order.orderDate)}</Text>
 
-      <FlatList
+     <FlatList
         data={order.items}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => item.id?.toString() ?? `item-${index}`}
         renderItem={renderItem}
         scrollEnabled={false}
         contentContainerStyle={{ paddingBottom: 16 }}

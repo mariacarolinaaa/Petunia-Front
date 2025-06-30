@@ -120,10 +120,11 @@ export default function OrderConfirmationScreen() {
 
       <FlatList
         data={order.items}
-        keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
+        keyExtractor={(item, index) => item.id?.toString() ?? `item-${index}`}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
       />
+
 
       <Text style={styles.total}>
         Total do Pedido: {formatPrice(totalOrderPrice)}
